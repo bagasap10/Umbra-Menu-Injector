@@ -27,25 +27,48 @@ namespace UmbraInjector
 
         public static string GetDLLName()
         {
-            string dllName = "";
-            var currentFiles = Directory.GetFiles("Data/UmbraMenu/");
-            foreach (string fileName in currentFiles)
+            // Always look for a simple UmbraMenu.dll in the folder.
+            foreach (var file in Directory.GetFiles("Data/UmbraMenu/"))
             {
-                if (dllName.Contains(Program.currentVersion))
-                {
-                    break;
-                }
+                string name = Path.GetFileName(file);
+
+                if (name.Equals("UmbraMenu.dll", StringComparison.OrdinalIgnoreCase))
+                    return name;
+            }
+
+            // Fallback: pick any dll that contains "Umbra"
+            foreach (var file in Directory.GetFiles("Data/UmbraMenu/"))
+            {
+                string name = Path.GetFileName(file);
+                if (name.Contains("Umbra") && name.EndsWith(".dll"))
+                    return name;
+            }
+
+            return "";
+        }
+
+        //Original
+        //public static string GetDLLName()
+        //{
+        //    string dllName = "";
+        //    var currentFiles = Directory.GetFiles("Data/UmbraMenu/");
+        //    foreach (string fileName in currentFiles)
+        //    {
+        //        if (dllName.Contains(Program.currentVersion))
+        //        {
+        //            break;
+        //        }
                 
-                string temp = fileName.Replace("Data/UmbraMenu/", "");
-                if (temp.EndsWith(".dll") && temp.Contains("Umbra"))
-                {
-                    dllName = temp;
-                }
+        //        string temp = fileName.Replace("Data/UmbraMenu/", "");
+        //        if (temp.EndsWith(".dll") && temp.Contains("Umbra"))
+        //        {
+        //            dllName = temp;
+        //        }
                 
  
-            }
-            return dllName;
-        }
+        //    }
+        //    return dllName;
+        //}
 
         public static void Inject(bool alreadyOpen)
         {
